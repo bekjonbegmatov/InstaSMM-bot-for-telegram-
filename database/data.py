@@ -1,9 +1,12 @@
 import sqlite3
 
+"""
+    CLASS FOR MANAGING WHITH USER_MODEL
+"""
+
 class User:
     # Initialization class
     def __init__(self):
-
         # Conecting Database 
         self.conn = sqlite3.connect('data.sqlite3', check_same_thread=False)
         self.cursor = self.conn.cursor()
@@ -18,7 +21,6 @@ class User:
 
     # The method for adding a new users
     def adding_user(self , username:str, first_name:str, second_name:str, chat_id:int, user_id:int, balance:str):
-        # Adding values 
         self.cursor.execute(
             'INSERT INTO users (user_id, chat_id, username, first_name, second_name, balance) VALUES (?, ?, ?, ?, ?, ?)' ,
             (
@@ -29,8 +31,9 @@ class User:
                 second_name, 
                 balance
                 ))
-        self.conn.commit() # commit the conection
+        self.conn.commit()
         return True
+
     # The method for getting all users
     def get_all_users(self):
         self.cursor.execute('SELECT * from users')
@@ -38,13 +41,9 @@ class User:
 
     # The method wil be check user in db if 404 , add tom db
     def check_user_if_not_add(self, username:str, first_name:str, second_name:str, chat_id:int, user_id:int, balance:str):
-
-        # Getting all users
         users = self.get_all_users()
-        # Checking user
         for user in users:
             if user[1] == user_id :
-                # Return True if the user was found
                 return True
         # Adding if user not found
         self.adding_user(
@@ -68,7 +67,7 @@ class User:
             return False
 
     """
-    THE METHODS FOR CREATING ORDERS
+        THE METHODS FOR CREATING ORDERS
     """
 
     # Creating a new record of order
@@ -106,3 +105,95 @@ class User:
             return True
         except:
             return False
+
+"""
+    CLASS FOR MANAGING WHITH ADMIN_MODEL
+"""
+
+class Admin:
+
+    def __init__(self):
+        self.conn = sqlite3.connect('data.sqlite3', check_same_thread=False)
+        self.cursor = self.conn.cursor()
+
+    # The method for creating admins
+    def create_admin(self, user_id:int, chat_id:int, username:str, role:str):
+        self.cursor.execute("INSERT INTO admin (user_id, chat_id, username, role) VALUES (?, ?, ?, ?)", 
+        (
+            user_id,
+            chat_id,
+            username,
+            role
+        ))
+        self.conn.commit()
+        return True
+
+    # The method for getting all admins list
+    def get_all_admins(self):
+        self.cursor.execute("SELECT * from admin")
+        return self.cursor.fetchall()
+
+    # The method for getting adminn whith roles
+    def get_admin_with_role(self, role):
+        admins = self.get_all_admins()
+        ral = [] # Return admin list
+        for adm in admins:
+            if adm[4] == role: ral.append(adm)
+        return ral
+
+    # The method for changing role admins
+    def set_role(self, user_id, new_role):
+        try:
+            self.cursor.execute("UPDATE admin SET role = ? WHERE user_id = ?", (new_role, user_id))
+            self.conn.commit()
+            return True
+        except:
+            return False
+
+    # The method for removing admin whith user_id
+    def remove_admin(self, user_id):
+        try:
+            self.cursor.execute("DELETE FROM admin WHERE user_id = ?", (user_id))
+            self.conn.commit()
+            return True
+        except:
+            return False
+
+"""
+    CLASS FOR MANAGING WHITH CHANALS_MODEL
+"""
+
+class Chanals:
+
+    def __init__(self):
+        self.conn = sqlite3.connect('data.sqlite3', check_same_thread=False)
+        self.cursor = self.conn.cursor()
+
+    # The method for creating chanals
+    def create_chanal(self, chanal_name:str, current_trafic:int, final_trafic:int, is_active:bool):
+        self.cursor.execute("INSERT INTO chanals (chanal_name, current_trafic, final_trafic, is_active) VALUES (?, ?, ?, ?)" , 
+        (
+            chanal_name,
+            current_trafic,
+            final_trafic,
+            is_active,
+        ))
+        self.conn.commit()
+        return True
+
+    # The method for changing trafic 
+    def change_trafic(self, current_trafic:int, idv:int):
+        self.cursor.execute("UPDATE chanals SET current_trafic = ? WHERE id = ?", (current_trafic, idv))
+        self.conn.commit()
+        return True
+
+    # The method for changing active | True or False
+    def change_active(self, is_active:bool, idv:int):
+        self.cursor.execute("UPDATE chanals SET is_active = ? WHERE id = ?", (is_active, idv))
+        self.conn.commit()
+        return True
+
+    # The method for getting all chanals
+    def get_all_chanals(self):
+        self.cursor.execute("SELECT * from chanals")
+        return self.cursor.fetchall()
