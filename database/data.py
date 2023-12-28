@@ -47,7 +47,14 @@ class User:
                 # Return True if the user was found
                 return True
         # Adding if user not found
-        self.adding_user(username=username, first_name=first_name, second_name=second_name , chat_id=chat_id, user_id=user_id, balance=balance)
+        self.adding_user(
+            username=username, 
+            first_name=first_name, 
+            second_name=second_name, 
+            chat_id=chat_id, 
+            user_id=user_id, 
+            balance=balance
+            )
         return False
 
     # The method for editing updating a balance     
@@ -60,12 +67,42 @@ class User:
             print(f"Error updating balance: {e}")
             return False
 
+    """
+    THE METHODS FOR CREATING ORDERS
+    """
 
-        
-# use = User()
-# use.adding_user('behruz', 'begmatov', 'behruz', 123343, 131313644, '1000')
-# if use.check_user_if_not_add('Sardor', 'begmatov', 'behruz', 1233432243, 133423644, '1000') : print("Ha bor !")
-# else : print('yoq ikan yangi qushildi')
-# use.update_balance(user_id=13131323644, new_balance='2000')
+    # Creating a new record of order
+    def create_order(self, user_id:int, price:str, order_id:int, status:str, count:int, remains:int, url:str ):
+        try:
+            self.cursor.execute("INSERT INTO user_history (user_id, price, order_id, status, count, remains, url) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                user_id,
+                price,
+                order_id,
+                status,
+                count,
+                remains,
+                url
+            ))
+            self.conn.commit()
+            return True # If all of OK
+        except:
+            return False # If something is not OK
 
-    
+    # The method for getting a list of history user
+    def get_history(self, user_id:int):
+        self.cursor.execute("SELECT * from user_history")
+        history = self.cursor.fetchall()
+        user_history = []
+        for his in history:
+            if his[1] == user_id : user_history.append(his)
+        return user_history
+
+    # The method for uploading a status of order
+    def update_status_of_order(self, order_id:int, status:str):
+        try:
+            self.cursor.execute("UPDATE user_history SET status = ? WHERE order_id = ?", (status, order_id))
+            self.conn.commit()
+            return True
+        except:
+            return False
