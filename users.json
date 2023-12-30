@@ -1,0 +1,38 @@
+[
+       {
+              "id": 2,
+              "user id": 131313644,
+              "chat id": 123343,
+              "user name": "behruz",
+              "first name": "begmatov",
+              "second name": "behruz",
+              "balance": 2000
+       },
+       {
+              "id": 4,
+              "user id": 133423644,
+              "chat id": 1233432243,
+              "user name": "Sardor",
+              "first name": "begmatov",
+              "second name": "behruz",
+              "balance": 1000
+       },
+       {
+              "id": 5,
+              "user id": 5163141099,
+              "chat id": 5163141099,
+              "user name": "behruzbegmatov",
+              "first name": "Behruz",
+              "second name": "Begmatov",
+              "balance": 50
+       },
+       {
+              "id": 7,
+              "user id": 6938604004,
+              "chat id": 6938604004,
+              "user name": "mitiqjon",
+              "first name": "Mitiq",
+              "second name": "Mitiqovich",
+              "balance": 50
+       }
+]

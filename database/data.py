@@ -1,5 +1,5 @@
 import sqlite3
-
+import json
 """
     CLASS FOR MANAGING WHITH USER_MODEL
 """
@@ -66,6 +66,46 @@ class User:
             print(f"Error updating balance: {e}")
             return False
 
+    # The method for exporting all users to txt file
+    def extport_to_txt(self):
+        txt_file = open('users.txt', 'w')
+        lis = self.get_all_users()
+        for usr in lis:
+            temp = []
+            for i in range(6):
+                temp.append(usr[i])  
+            txt_file.write(str(temp) + '\n')
+        txt_file.close
+        return True
+
+    # The method for eporting data to json file 
+    def export_to_json(self):
+        users = self.get_all_users()
+        data = []
+        for user in users:
+            temp = {
+                'id' : user[0],
+                'user id' : user[1],
+                'chat id' : user[2],
+                'user name' : user[3],
+                'first name' : user[4],
+                'second name' : user[5],
+                'balance' : user[6],
+            }
+            data.append(temp)
+        with open( "users.json" , 'w' , encoding='utf-8') as f:
+            json.dump(data , f , ensure_ascii=False , indent=7)
+        return True
+
+    # The method for exporting data array
+    def export_to_array(self):
+        users = self.get_all_users()
+        data = ''
+        i = 1
+        for user in users:
+            data += f'№{i}\n├id : {user[0]}\n├user id : {user[1]}\n├chat id : {user[2]}\n├user name : @{user[3]}\n├first name : {user[4]}\n├second name : {user[5]}\n└balance : {user[6]}\n\n'
+            i+=1
+        return data
     """
         THE METHODS FOR CREATING ORDERS
     """
@@ -158,6 +198,14 @@ class Admin:
             return True
         except:
             return False
+    
+    # Check is user admin
+    def is_admin(self, user_id:int):
+        admins = self.get_all_admins()
+        for admin in admins:
+            if admin[1] == user_id:
+                return admin[4]
+        return 'user'
 
 """
     CLASS FOR MANAGING WHITH CHANALS_MODEL
@@ -182,8 +230,8 @@ class Chanals:
         return True
 
     # The method for changing trafic 
-    def change_trafic(self, current_trafic:int, idv:int):
-        self.cursor.execute("UPDATE chanals SET current_trafic = ? WHERE id = ?", (current_trafic, idv))
+    def change_trafic(self, final_trafic:int, idv:int):
+        self.cursor.execute("UPDATE chanals SET final_trafic = ? WHERE id = ?", (final_trafic, idv))
         self.conn.commit()
         return True
 
@@ -197,3 +245,6 @@ class Chanals:
     def get_all_chanals(self):
         self.cursor.execute("SELECT * from chanals")
         return self.cursor.fetchall()
+
+U = User()
+U.export_to_json()
