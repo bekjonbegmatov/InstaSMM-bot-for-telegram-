@@ -157,17 +157,28 @@ class Admin:
         self.cursor = self.conn.cursor()
 
     # The method for creating admins
-    def create_admin(self, user_id:int, chat_id:int, username:str, role:str):
-        self.cursor.execute("INSERT INTO admin (user_id, chat_id, username, role) VALUES (?, ?, ?, ?)", 
-        (
-            user_id,
-            chat_id,
-            username,
-            role
-        ))
-        self.conn.commit()
-        return True
+    def create_admin(self, new_admin_id:int, role:str):
+        U = User()
+        users = U.get_all_users()
+        try:
+            for admin in users:
+                if admin[0] == new_admin_id:
+                    user_id = admin[1]
+                    chat_id = admin[2]
+                    username = admin[3]
 
+            self.cursor.execute("INSERT INTO admin (user_id, chat_id, username, role) VALUES (?, ?, ?, ?)", 
+            (
+                user_id,
+                chat_id,
+                username,
+                role
+            ))
+            self.conn.commit()
+            return True
+        except:
+            return False
+    
     # The method for getting all admins list
     def get_all_admins(self):
         self.cursor.execute("SELECT * from admin")
@@ -246,5 +257,6 @@ class Chanals:
         self.cursor.execute("SELECT * from chanals")
         return self.cursor.fetchall()
 
-U = User()
-U.export_to_json()
+# U = Admin()
+# # U.set_role(5163141099 , 'super_admin')
+# print(U.create_admin(1001 , 'moder'))
