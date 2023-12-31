@@ -184,3 +184,18 @@ async def chanal_add_command(message : Message):
         
         # If some thing wrong 
         except : await message.reply(text='/chanal_add chanal_name final_trafic')
+
+@router.message(Command('set_ft'))
+async def set_final_trafic_command(message:Message):
+    A = Admin()
+    if A.is_admin(message.from_user.id) != 'user':
+        text = message.text
+        text = text.split()
+    
+        try:
+            C = Chanals()
+            if C.change_trafic(final_trafic=int(text[1]), idv=int(text[2])):
+                chanal_info = C.get_chanal_with_id(idv=int(text[2]))
+                await message.bot.send_message(chat_id=message.chat.id , text=f"✅ SUCCESS ✅ -> FTrafic == {text[1]}\n{chanal_info}" )
+            else : pass
+        except: await message.reply(text='/set_ft int:num id_chanal (num => new number of trafic)')

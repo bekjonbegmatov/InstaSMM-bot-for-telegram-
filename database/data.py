@@ -242,9 +242,12 @@ class Chanals:
 
     # The method for changing trafic 
     def change_trafic(self, final_trafic:int, idv:int):
-        self.cursor.execute("UPDATE chanals SET final_trafic = ? WHERE id = ?", (final_trafic, idv))
-        self.conn.commit()
-        return True
+        try:
+            self.cursor.execute("UPDATE chanals SET final_trafic = ? WHERE id = ?", (final_trafic, idv))
+            self.conn.commit()
+            return True
+        except:
+            return False
 
     # The method for changing active | True or False
     def change_active(self, is_active:bool, idv:int):
@@ -256,6 +259,12 @@ class Chanals:
     def get_all_chanals(self):
         self.cursor.execute("SELECT * from chanals")
         return self.cursor.fetchall()
+
+    def get_chanal_with_id(self, idv:int):
+        chanals = self.get_all_chanals()
+        for chanal in chanals: 
+            if chanal[0] == idv : return f'├Chanal : @{chanal[1]}\n├Current Trafic : {chanal[2]}\n├Final Trafic : {chanal[3]}\n└Is active : {chanal[4]}'
+        return False
 
 # U = Admin()
 # # U.set_role(5163141099 , 'super_admin')
