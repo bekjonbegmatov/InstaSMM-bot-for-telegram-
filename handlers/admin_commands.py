@@ -138,17 +138,49 @@ async def create_admin_command(message:Message):
     # # If isn'nt Supper admin
     else : await message.reply(text="You are not Supper Admin !!!")
 
+# Function for removing admins
 @router.message(Command('remove_admin'))
 async def remove_admin_command(message:Message):
     A = Admin()
     bot = message.bot
     proverka = A.is_admin(message.from_user.id)
+
+    # Checking is uadmin Super Admin
     if proverka == 'super_admin':
         text = message.text
+
+        # Trying remove admin
         try:
             admin_id = (text.split())[1]
+
+            # Checking data and removing admin where id = admin_id
             if A.remove_admin(user_id=int(admin_id)): await bot.send_message(chat_id=message.chat.id, text=f"✅ SUCCESS ✅\nAdmin -> User")
-            else : await message.reply(text="⛔️ ERROR ⛔️\nPleace write correct data !")
+            else : await message.reply(text="⛔️ ERROR ⛔️\nPleace write correct data !") # If data error
+        
+        # If can't remove user
         except: await message.reply(text='/remove_admin id_admin (Removes admin)')
     elif proverka == 'user' : pass
     else : await message.reply(text="You are not Super Admin !!!")
+
+# Function for adding sponseor chanals
+@router.message(Command('chanal_add'))
+async def chanal_add_command(message : Message):
+    A = Admin()
+
+    # Checking is admin
+    if A.is_admin(message.from_user.id) != 'user':
+        text = message.text
+        text = text.split()
+        
+        # Trying add chalal
+        try:
+            C = Chanals()
+            chanal_name = text[1]
+            final_trafic = text[2]
+
+            # Check data and add
+            if C.create_chanal(chanal_name=chanal_name,current_trafic=0, final_trafic=int(final_trafic), is_active=True):
+                await message.bot.send_message(chat_id=message.chat.id, text=f"✅ SUCCESS ✅\n├Chanal @{chanal_name} added\n├Current trafic : 0\n├Final trafic : {final_trafic}\n└Is Active : True")
+        
+        # If some thing wrong 
+        except : await message.reply(text='/chanal_add chanal_name final_trafic')
