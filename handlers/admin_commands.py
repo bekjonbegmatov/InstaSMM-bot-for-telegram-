@@ -122,8 +122,7 @@ async def create_admin_command(message:Message):
             if role == "super_admin" or role == 'admin' or role == 'moder':
 
                 # Checking is user_id is correct if ok create admin
-                if A.create_admin(new_admin_id=int(new_admin_id), role=role):
-                    await message.reply(text=f"✅ SUCCESS ✅\nUser -> {role}")
+                if A.create_admin(new_admin_id=int(new_admin_id), role=role) : await message.reply(text=f"✅ SUCCESS ✅\nUser -> {role}")
 
                 # If error user_id
                 else: await message.reply(text="⛔️ ERROR ⛔️\nPleace write correct data !")
@@ -138,3 +137,18 @@ async def create_admin_command(message:Message):
 
     # # If isn'nt Supper admin
     else : await message.reply(text="You are not Supper Admin !!!")
+
+@router.message(Command('remove_admin'))
+async def remove_admin_command(message:Message):
+    A = Admin()
+    bot = message.bot
+    proverka = A.is_admin(message.from_user.id)
+    if proverka == 'super_admin':
+        text = message.text
+        try:
+            admin_id = (text.split())[1]
+            if A.remove_admin(user_id=int(admin_id)): await bot.send_message(chat_id=message.chat.id, text=f"✅ SUCCESS ✅\nAdmin -> User")
+            else : await message.reply(text="⛔️ ERROR ⛔️\nPleace write correct data !")
+        except: await message.reply(text='/remove_admin id_admin (Removes admin)')
+    elif proverka == 'user' : pass
+    else : await message.reply(text="You are not Super Admin !!!")

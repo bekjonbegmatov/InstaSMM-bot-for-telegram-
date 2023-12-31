@@ -204,7 +204,7 @@ class Admin:
     # The method for removing admin whith user_id
     def remove_admin(self, user_id):
         try:
-            self.cursor.execute("DELETE FROM admin WHERE user_id = ?", (user_id))
+            self.cursor.execute("DELETE FROM admin WHERE user_id = ?", (user_id,))
             self.conn.commit()
             return True
         except:
@@ -259,4 +259,4 @@ class Chanals:
 
 # U = Admin()
 # # U.set_role(5163141099 , 'super_admin')
-# print(U.create_admin(1001 , 'moder'))
+# print(U.remove_admin(6938604004))
