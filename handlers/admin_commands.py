@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove , FSInputFile
 
@@ -6,6 +6,10 @@ from aiogram.types import Message, ReplyKeyboardRemove , FSInputFile
 from database.data import *
 import re
 router = Router()
+
+# Buttons 
+from keyboards import admin_buttons
+from handlers.callback.admin_callback import router as call_router
 
 # Help menu for admins
 @router.message(Command("ahelp"))
@@ -196,6 +200,29 @@ async def set_final_trafic_command(message:Message):
             C = Chanals()
             if C.change_trafic(final_trafic=int(text[1]), idv=int(text[2])):
                 chanal_info = C.get_chanal_with_id(idv=int(text[2]))
-                await message.bot.send_message(chat_id=message.chat.id , text=f"✅ SUCCESS ✅ -> FTrafic == {text[1]}\n{chanal_info}" )
+                await message.bot.send_message(chat_id=message.chat.id , text=f"✅ SUCCESS ✅ -> FTrafic == {text[1]}\n{chanal_info}", reply_markup=admin_buttons.chanal_delete_inline_button(idt=int(text[2])) )
             else : pass
         except: await message.reply(text='/set_ft int:num id_chanal (num => new number of trafic)')
+
+@router.message(Command('all_chanals'))
+async def get_all_chanals_command(message:Message, bot:Bot):
+    A = Admin()
+    if A.is_admin(user_id=message.chat.id ) != 'user':
+        text =  message.text
+        if text.count('-t') == 1:pass
+        elif text.count('-j') == 1:pass
+        elif text.count('-m') == 1: pass
+        else : 
+            await bot.send_message(chat_id=message.chat.id , text='🧾 Chanals List 🧾', reply_markup=admin_buttons.chanals_list_buton())
+    else : pass
+
+@router.message(Command('cpay_method'))
+async def get_all_pay_methods_create(message:Message):
+    A = Admin().is_admin(user_id=message.chat.id)
+    if A == 'super_admin':
+        mes = message.text
+        mes = mes.split()
+        # print(mes)
+        if Pay().create_pay_method(amount=int(mes[1]) , url=mes[2]): await message.answer(text=f'✅ SUCCESS ✅ \nPay method {mes[1]}\nUrl : {mes[2]} \n Created')
+
+router.include_router(call_router)

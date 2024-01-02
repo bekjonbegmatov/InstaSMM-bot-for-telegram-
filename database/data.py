@@ -56,6 +56,18 @@ class User:
             )
         return False
 
+    def get_user_with_user_id(self, user_id:int):
+        users = self.get_all_users()
+        for usr in users:
+            if usr[1] == user_id:
+                u = {
+                    'id' : usr[0],
+                    'username' : usr[3],
+                    'balance' : usr[6]
+                }
+                return u
+        return False
+    
     # The method for editing updating a balance     
     def update_balance(self, user_id: int, new_balance: str):
         try:
@@ -265,6 +277,25 @@ class Chanals:
         for chanal in chanals: 
             if chanal[0] == idv : return f'├Chanal : @{chanal[1]}\n├Current Trafic : {chanal[2]}\n├Final Trafic : {chanal[3]}\n└Is active : {chanal[4]}'
         return False
+
+class Pay:
+    def __init__(self):
+        self.conn = sqlite3.connect(database='data.sqlite3' ,check_same_thread=False)
+        self.cursor = self.conn.cursor()
+
+    def create_pay_method(self, amount:int, url:str):
+        try:
+            self.cursor.execute('INSERT INTO pay (amount, url) VALUES (?, ?)' , (amount, url))
+            self.conn.commit()
+            return True
+        except : 
+            return False
+        
+
+    def get_all_pay_amounts(self):
+        self.cursor.execute('SELECT * from pay')
+        return self.cursor.fetchall()
+
 
 # U = Admin()
 # # U.set_role(5163141099 , 'super_admin')
