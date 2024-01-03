@@ -1,24 +1,26 @@
 import requests
 
 class Order:
-    def __init__(self, url:str):
-        self.url = url
-
-    def create_test_order(self):
-        # https://venro.ru/api/orders?action=add&key=7dbdb2323c085e5acb97d55c1f415ef0&url=https://www.instagram.com/instagram/&count=100&type=2
-
-        url = f'https://venro.ru/api/orders?action=add&key=7dbdb2323c085e5acb97d55c1f415ef0&url={self.url}&count=200&type=7'
-
-        status = requests.get(url=url)
-        print(status.json())
-
-    def check_order(self, idv:int):
+    def __init__(self):
+        # self.url = url
+        # self.count = count
+        self.key = '7dbdb2323c085e5acb97d55c1f415ef0'
+        # self.type_id = type_id
+    
+    def check_order(self, idv:str):
         url = f'https://venro.ru/api/orders?action=check&key=7dbdb2323c085e5acb97d55c1f415ef0&id={idv}'
         status = requests.get(url)
-        print(status.json())
+        return status.json()
 
-# Order(url='https://www.instagram.com/behruz.beg/').create_test_order()
-Order(url='https://www.instagram.com/behruz.beg/').check_order(idv=475590203)
+    def create_instagram_order(self, url:str, count:int, type_id:str):
+        aurl = f'https://venro.ru/api/orders?action=add&key={self.key}&url={url}&count={count}&type={type_id}'
+        status = requests.get(url=aurl)
+        return status.json()
+
+
+# Order(url='https://www.instagram.com/zohid.mee/').create_test_order()
+# Order(url='https://www.instagram.com/behedgkosfhvdfiusvh/', count=12, type_id='7').create_instagram_order()
+# Order(url='https://www.instagram.com/behedgkosfhvdfiusvh/', count=12, type_id='7').check_order(idv=476056159)
 
 
 # https://www.instagram.com/behruz.beg/

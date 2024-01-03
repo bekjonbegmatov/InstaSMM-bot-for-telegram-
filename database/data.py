@@ -1,5 +1,7 @@
 import sqlite3
 import json
+import time
+
 """
     CLASS FOR MANAGING WHITH USER_MODEL
 """
@@ -118,6 +120,29 @@ class User:
             data += f'№{i}\n├id : {user[0]}\n├user id : {user[1]}\n├chat id : {user[2]}\n├user name : @{user[3]}\n├first name : {user[4]}\n├second name : {user[5]}\n└balance : {user[6]}\n\n'
             i+=1
         return data
+
+    def create_user_pay_history(self, user_id:int, amount:str, description:str):
+        current_time = time.time()
+        formatted_time = time.ctime(current_time)
+        formatted_time = str(formatted_time)
+        try:
+            self.cursor.execute('INSERT INTO user_pay_history (user_id ,amount, description, data) VALUES (?, ?, ?, ?)', (user_id, amount, description, formatted_time))
+            self.conn.commit()
+            return True
+        except:
+            return False
+
+    def user_pay_history_txport_to_array(self, user_id:int):
+        
+        user_pay_history = self.cursor.execute('SELECT * from user_pay_history').fetchall()
+        i = 1
+        data = ''
+        for pay_history in user_pay_history:
+            if pay_history[1] == user_id:
+                data += f'№{i}\n├summa : {pay_history[2]}₽\n├turi : {pay_history[3]}\n└sana : {pay_history[4]}\n\n'
+                i+=1
+        return data
+    
     """
         THE METHODS FOR CREATING ORDERS
     """
@@ -140,13 +165,17 @@ class User:
         except:
             return False # If something is not OK
 
+
     # The method for getting a list of history user
     def get_history(self, user_id:int):
         self.cursor.execute("SELECT * from user_history")
         history = self.cursor.fetchall()
-        user_history = []
+        user_history = ''
+        i=1
         for his in history:
-            if his[1] == user_id : user_history.append(his)
+            if his[1] == user_id :
+                user_history+= f'№{i}\n├Summa : {his[2]}\n├Buyurtma ID : {his[3]}\n├Miqdori : {his[5]}\n└Ssilks : {his[7]}\n\n'
+                i+=1
         return user_history
 
     # The method for uploading a status of order
@@ -297,6 +326,3 @@ class Pay:
         return self.cursor.fetchall()
 
 
-# U = Admin()
-# # U.set_role(5163141099 , 'super_admin')
-# print(U.remove_admin(6938604004))

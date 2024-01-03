@@ -1,6 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from handlers import command_heandler , admin_commands, servises_command
+from handlers import command_heandler , admin_commands, servises_command , rassilka
 # Importing API tocen of bot from ./config.py 
 from config import TOKEN 
 
@@ -13,6 +13,7 @@ async def main():
         admin_commands.router,
         command_heandler.router,
         servises_command.router,
+        rassilka.router,
         )
 
     await bot.delete_webhook(drop_pending_updates=True)
