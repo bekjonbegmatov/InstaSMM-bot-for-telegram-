@@ -47,23 +47,28 @@ async def all_users_command(message:Message):
         U = User()
         bot = message.bot
         text = message.text
-
+        floder_path = '/Users/apple/Documents/python/tg_bot/InstaFollowerBot/'
         # Export data to .text file
         if text.count('-t') == 1:
             U.extport_to_txt()
-            document = FSInputFile(path="/Users/apple/Documents/python/tg_bot/InstaFollowerBot/users.txt", filename='Users.txt')
+            document = FSInputFile(path=floder_path+'users.txt', filename='Users.txt')
             await bot.send_document(message.chat.id, document=document, caption='This is a list of bot users')
 
         # Exporting data to .json fele
         elif text.count('-j') == 1:
             U.export_to_json()
-            document = FSInputFile(path='/Users/apple/Documents/python/tg_bot/InstaFollowerBot/users.json', filename='Users.json')
+            document = FSInputFile(path=floder_path+'users.json', filename='Users.json')
             await bot.send_document(chat_id=message.chat.id, document=document , caption='This is a list of bot users in json file')
         
         # Sending data to the chat
         elif text.count('-m') == 1:
             txt = U.export_to_array()
             await bot.send_message(chat_id=message.chat.id, text=txt)
+
+        elif text.count('-db') == 1:
+            document = FSInputFile(path=floder_path+'data.sqlite3' , filename='data.sqlite3')
+            await bot.send_message(chat_id=message.chat.id, text=txt)    
+        
         else : await message.reply(text="Pleace select one option -t -j -m (-t -> file.txt, -j -> file.json, -m -> in message)")
 
 # Function for change role of user

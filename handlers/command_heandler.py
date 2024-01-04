@@ -5,6 +5,8 @@ from aiogram.enums.parse_mode import ParseMode
 from handlers.servises_command import all_uslugi_command
 from database.data import *
 
+from handlers.chanals.chanals import check_subckribe , subscribe_button
+
 router = Router()
 
 @router.message(Command("start"))
@@ -46,7 +48,9 @@ async def cmd_start(message: Message, command:Command):
         await message.answer_sticker(sticker='CAACAgIAAxkBAAEKPlhk-eL1_yehX1XkfY7ij6piNAqDSwACywEAAhZCawqjQZ8C-a857jAE')
         msg = f'Assalomu alykum {message.from_user.first_name}, men sizni yana kurganimdan hursand man !\nMen {info.first_name}.\nMen sizga Instagramda rivojlanishingizga yordam beraman!'
         await message.answer(text=msg)
-        await all_uslugi_command(message=message)
+        if await check_subckribe(user_id=message.from_user.id, bot=message.bot):
+            await all_uslugi_command(message=message)
+        else : await message.answer(text='Botdan foydalanish uchun kanallarga azo buling :' , reply_markup=await subscribe_button(user_id=message.from_user.id , bot=message.bot))
 
     else :
         await message.answer_sticker(sticker='CAACAgIAAxkBAAEKPlZk-eLKS3tUCG_aRGY1wZjJY8tnxAACxgEAAhZCawpKI9T0ydt5RzAE')
@@ -64,7 +68,8 @@ async def cmd_start(message: Message, command:Command):
         await message.answer(text+'\n<b>Ilk foydalanuvchilar uchun bonus : 20₽</b>' , parse_mode=ParseMode.HTML)
         await message.answer('🎁 Bizning bot qanday ishlashini tekshiring, balansingiz 20₽ ga to\'ldirildi.')
         # Send info to admins 
-        await all_uslugi_command(message=message)
+        if await check_subckribe(user_id=message.from_user.id) : await all_uslugi_command(message=message)
+        else : await message.answer(text='Botdan foydalanish uchun kanallarga azo buling :' , reply_markup=await subscribe_button(user_id=message.from_user.id , bot=message.bot))
         admin = Admin()
         admins = admin.get_all_admins()
         for ad in admins:
@@ -95,7 +100,9 @@ Faqatgina yangi foydalanuvchilar uchun ⚡️
 
 @router.message(Command("menu"))
 async def help_command(message: Message):
-    await all_uslugi_command(message=message)
+    if await check_subckribe(user_id=message.from_user.id, bot=message.bot):
+        await all_uslugi_command(message=message)
+    else : await message.answer(text='Botdan foydalanish uchun kanallarga azo buling :' , reply_markup=await subscribe_button(user_id=message.from_user.id , bot=message.bot))
 
 terms = """Instagram SMM botidan foydalanish shartlari:
 
