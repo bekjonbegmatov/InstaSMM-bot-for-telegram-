@@ -1,8 +1,5 @@
 # Bot token can be obtained via https://t.me/BotFather
 
-TOKEN = "6591444131:AAEujTeWq_kqr1FYhFi-JDTi1Y-VLS7CMYE"
-
-CLICK_TEST_PAY_TOCEN = "398062629:TEST:999999999_F91D8F69C042267444B74CC0B3C747757EB0E065"
 
 MY_AMOUNT_URL = 'https://my.qiwi.com/form/Aleksandr-SH6tr1cfn5'
 
